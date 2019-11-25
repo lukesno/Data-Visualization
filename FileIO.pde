@@ -6,8 +6,7 @@
 import controlP5.*;
 
 ControlP5 cp5;
-Button bar;
-Button plot;
+Button bar, plot, max, min;
 Table table;
 Date[] date;
 TemperatureData[] tempData;
@@ -47,18 +46,18 @@ void setup(){
                     if(bar.isOn()){
                        bar.setOff();
                        background(#FFFFFF);
-                       reset();
+                       reset(); //reset field
                     }
                     else if (plot.isOn()){
                        plot.setOff(); //since plot and bar cannot be on at same time
                        bar.setOn();
                        drawBars(); 
-                       reset();
+                       
                     }
                     else{
                        bar.setOn();
                        drawBars(); 
-                       reset();                      
+                                             
                     }
                     
                   }
@@ -83,33 +82,123 @@ void setup(){
                        bar.setOff(); //since bar and plot cannot be on at same time
                        plot.setOn();
                        drawPlot(); 
-                       reset();
+                       
                     }
                     else{
                        plot.setOn();
                        drawPlot(); 
-                       reset();                      
+                                           
                     }
                     
                   }
                 }
               });
                
- Button monthly = cp5.addButton("Monthly")
-                   .setValue(0)
-                   .setPosition(10,160)
-                   .setSize(50,50)
-                   .setColorBackground(#5C5D5D);
- Button max = cp5.addButton("Max")
+ //Button monthly = cp5.addButton("Monthly")
+ //                  .setValue(0)
+ //                  .setPosition(10,160)
+ //                  .setSize(50,50)
+ //                  .setColorBackground(#5C5D5D)
+ //                  .setColorForeground(#889393);
+ max = cp5.addButton("Max")
                .setValue(0)
                .setPosition(10,220)
                .setSize(50,50)
-               .setColorBackground(#5C5D5D);
- Button min = cp5.addButton("Min")
+               .setColorBackground(#5C5D5D)
+               .setColorForeground(#889393)
+               .setColorActive(#889393)
+               .setSwitch(true)
+               .addCallback(new CallbackListener(){
+                public void controlEvent(CallbackEvent event){
+                  if(event.getAction() == ControlP5.ACTION_PRESS){
+                    
+                    //turn off min if it is already on when max is clicked
+                    if((min.isOn())){
+                       min.setOff();
+                       max.setOn();
+                          //if max was turned on while bar is turned on, draw max bar
+                          if(max.isOn() && bar.isOn()){
+                            drawBars();
+                          }
+                          //if max was turned on while plot is turned on, draw max plot
+                          else if(max.isOn() && plot.isOn()){
+                            drawPlot();
+                          }
+                    }
+                    else if (!max.isOn()){
+                        max.setOn();
+                          //if max was turned on while bar is turned on, draw max bar
+                          if(max.isOn() && bar.isOn()){
+                            drawBars();
+                          }
+                          //if max was turned on while plot is turned on, draw max plot
+                          else if(max.isOn() && plot.isOn()){
+                            drawPlot();
+                          }
+                    }
+                    //if max is turned off, redraw bars
+                    else if(max.isOn() && bar.isOn()){
+                     max.setOff();
+                     drawBars(); 
+                    }
+                    else if(max.isOn() && plot.isOn()){
+                     max.setOff();
+                     drawPlot();
+                    }
+                    
+                  }
+                }
+              });
+ min = cp5.addButton("Min")
                .setValue(0)
                .setPosition(10,280)
                .setSize(50,50)
-               .setColorBackground(#5C5D5D);
+               .setColorBackground(#5C5D5D)
+               .setColorForeground(#889393)
+               .setColorActive(#889393)
+               .setSwitch(true)
+               .addCallback(new CallbackListener(){
+                public void controlEvent(CallbackEvent event){
+                  if(event.getAction() == ControlP5.ACTION_PRESS){
+                    
+                    //turn off max if it is already on when min is clicked
+                    if(max.isOn()){
+                       max.setOff();
+                       min.setOn();
+                              //if min was turned on while bar is turned on, draw min bar
+                              if(min.isOn() && bar.isOn()){
+                                 drawBars();
+                              }
+                              //if min was turned on while plot is on, draw min bar
+                              else if(min.isOn() && plot.isOn()){
+                                 drawPlot();
+                              }      
+                    }
+                    else if(!min.isOn()){
+                       min.setOn(); 
+                              //if min was turned on while bar is turned on, draw min bar
+                              if(min.isOn() && bar.isOn()){
+                                 drawBars();
+                              }
+                              //if min was turned on while plot is on, draw min bar
+                              else if(min.isOn() && plot.isOn()){
+                                 drawPlot();
+                              }    
+                    }
+                    //if min is turned on, and bar is still on draw bars again
+                    else if(min.isOn() && bar.isOn()){
+                       min.setOff();
+                       drawBars();
+                    }
+                    //if min is turned on and plot is still on draw plot again
+                    else if(min.isOn() && plot.isOn()){
+                       min.setOff();
+                       drawPlot();
+                    }
+                    
+                  }
+                }
+              });;
                
  cp5.getController("bar");
 
