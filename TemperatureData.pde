@@ -6,10 +6,18 @@
 
 class TemperatureData{
   
-  Date a;
-  float minTemperature;
-  float maxTemperature;
+  Date date;
+  float minTemp;
+  float maxTemp;
+  float snowFall;
   
+  TemperatureData(Date date, float minTemp, float maxTemp, float snowFall){
+    this.date = date;
+    this.minTemp = minTemp;
+    this.maxTemp = maxTemp;
+    this.snowFall = snowFall;
+    
+  }
   
   
 }
