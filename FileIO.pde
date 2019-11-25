@@ -1,9 +1,12 @@
+
+import controlP5.*; 
+
 //store following member variables
 //filePath to store the path of the selected sensor data file
 //dataTable of type Table to load the data in the csv input file
 
 
-import controlP5.*;
+
 
 ControlP5 cp5;
 Button bar, plot, max, min;
@@ -31,10 +34,10 @@ public int multFact = 15; //to scale raw data onto graphs
 
 void setup(){
   
- background(#FFFFFF);
- 
+ background(0xffFFFFFF);
+ size(1700,800);
  /* Adding buttons */
- size(1700,800); 
+  
  textSize(9); //for formatting
  PFont font = createFont("Georgia Bold", 5);
  cp5 = new ControlP5(this);
@@ -50,7 +53,7 @@ void setup(){
                     
                     if(bar.isOn()){
                        bar.setOff();
-                       background(#FFFFFF);
+                       background(0xffFFFFFF);
                        axis(); //reset field
                     }
                     else if (plot.isOn()){
@@ -80,7 +83,7 @@ void setup(){
                     
                     if(plot.isOn()){
                        plot.setOff();
-                       background(#FFFFFF);
+                       background(0xffFFFFFF);
                        axis();
                     }
                     else if(bar.isOn()){
@@ -107,9 +110,9 @@ void setup(){
                .setValue(0)
                .setPosition(10,220)
                .setSize(50,50)
-               .setColorBackground(#5C5D5D)
-               .setColorForeground(#889393)
-               .setColorActive(#889393)
+               .setColorBackground(0xff5C5D5D)
+               .setColorForeground(0xff889393)
+               .setColorActive(0xff889393)
                .setSwitch(true)
                .addCallback(new CallbackListener(){
                 public void controlEvent(CallbackEvent event){
@@ -157,9 +160,9 @@ void setup(){
                .setValue(0)
                .setPosition(10,280)
                .setSize(50,50)
-               .setColorBackground(#5C5D5D)
-               .setColorForeground(#889393)
-               .setColorActive(#889393)
+               .setColorBackground(0xff5C5D5D)
+               .setColorForeground(0xff889393)
+               .setColorActive(0xff889393)
                .setSwitch(true)
                .addCallback(new CallbackListener(){
                 public void controlEvent(CallbackEvent event){
@@ -211,50 +214,58 @@ for(int a = 0, b = 400, c = 20; a < months.length-1; a++, b+=30){
   String name = months[a];
   String name2 = months[a+1];
   
-  if(a%2 == 0){
+  if(a%2 == 0){ //retrieve from index 0,2,4,6..
+
       buttons[a] = cp5.addButton(name)
       .setValue(0)
       .setPosition(c, b)
       .setSize(30,30)
-      .setColorBackground(#FABD8B)
-      .setColorForeground(#FADAC0)
-      .setColorActive(#FADAC0)
-      .setSwitch(true)
-      .addCallback(new CallbackListener(){
-                public void controlEvent(CallbackEvent event){
-                  if(event.getAction() == ControlP5.ACTION_PRESS){
-                    if(bar.isOn()){
-                        drawBarMonth();
-                    }
-                  }
-                }
-              });
+      .setColorBackground(0xffFABD8B)
+      .setColorForeground(0xffFADAC0)
+      .setColorActive(0xffFADAC0)
+      .setSwitch(true);
   }
   
-  if((a+1)%2 != 0 ){
+  if((a+1)%2 != 0 ){ //retrieve from index 1,3,5,7...
       buttons[a+1] = cp5.addButton(name2)
       .setValue(0)
       .setPosition(c*4, b)
       .setSize(30,30)
-      .setColorBackground(#FABD8B)
-      .setColorForeground(#FADAC0)
-      .setColorActive(#FADAC0)
-      .setSwitch(true)
-      .addCallback(new CallbackListener(){
-                public void controlEvent(CallbackEvent event){
-                   if(event.getAction() == ControlP5.ACTION_PRESS){
-                     if(bar.isOn()){
-                        drawBarMonth();
-                     }
-                   }
-                }
-              });
+      .setColorBackground(0xffFABD8B)
+      .setColorForeground(0xffFADAC0)
+      .setColorActive(0xffFADAC0)
+      .setSwitch(true);
+
     
   }
 
 }
 
-
+for(Button b: buttons){
+  final Button c = b;
+  b.addCallback(new CallbackListener(){
+                public void controlEvent(CallbackEvent event){
+                     if (event.getAction() == ControlP5.ACTION_PRESS){
+                       println("You're in!");
+                       if(bar.isOn() && !c.isOn()){
+                          c.setOn();
+                          drawBarMonth();
+  
+                       }
+                       else if(bar.isOn() && c.isOn()){
+                        c.setOff();
+                        drawBars();
+                       }
+                       else if(plot.isOn()){
+                          drawPlotMonth(); 
+  
+                       }
+                     
+                   }
+                }
+   });
+  
+}
 
  /*                */
  
@@ -270,9 +281,10 @@ for(int a = 0, b = 400, c = 20; a < months.length-1; a++, b+=30){
   
    date[counter] = new Date(row.getInt("Month"),row.getInt("Year"));
    tempData[counter] = new TemperatureData(date[counter], row.getFloat("Min Temperature"), row.getFloat("Max Temperature"), row.getFloat("Snow Fall"));
+
+ //  print(tempData[counter].maxTemp);
+ //  print(tempData[counter].minTemp, tempData[counter].maxTemp, tempData[counter].snowFall);
    counter++;
-  // print(tempData[counter].maxTemp);
- //  print(tempData[counter].a.Year, tempData[counter].a.Month, tempData[counter].minTemp, tempData[counter].maxTemp, tempData[counter].snowFall);
  }
  /*           */
 
@@ -281,12 +293,8 @@ for(int a = 0, b = 400, c = 20; a < months.length-1; a++, b+=30){
  axis();
 }
 
+
+
 void draw(){
  //axis(); //label is pixelated for some reason
 }
-
-
-
-
-
-
