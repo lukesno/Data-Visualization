@@ -7,10 +7,15 @@ import controlP5.*;
 
 ControlP5 cp5;
 Button bar, plot, max, min;
+Button jan, feb, mar, apr, may, jun, jul ,aug ,sep , oct, nov, dec;
+Button[] buttons= {jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}; //used to assign buttons
+String months[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"}; //used to name buttons
+
 Table table;
 Date[] date;
 TemperatureData[] tempData;
-public int perYear,month;
+public String name, name2; //for making month buttons
+public int perYear, month;
 public float maxTemp, minTemp, snowFall;
 
 public int xMin = 210;
@@ -46,7 +51,7 @@ void setup(){
                     if(bar.isOn()){
                        bar.setOff();
                        background(#FFFFFF);
-                       reset(); //reset field
+                       axis(); //reset field
                     }
                     else if (plot.isOn()){
                        plot.setOff(); //since plot and bar cannot be on at same time
@@ -76,7 +81,7 @@ void setup(){
                     if(plot.isOn()){
                        plot.setOff();
                        background(#FFFFFF);
-                       reset();
+                       axis();
                     }
                     else if(bar.isOn()){
                        bar.setOff(); //since bar and plot cannot be on at same time
@@ -94,12 +99,10 @@ void setup(){
                 }
               });
                
- //Button monthly = cp5.addButton("Monthly")
- //                  .setValue(0)
- //                  .setPosition(10,160)
- //                  .setSize(50,50)
- //                  .setColorBackground(#5C5D5D)
- //                  .setColorForeground(#889393);
+
+///////////////////////////////////////////
+
+
  max = cp5.addButton("Max")
                .setValue(0)
                .setPosition(10,220)
@@ -149,6 +152,7 @@ void setup(){
                   }
                 }
               });
+              
  min = cp5.addButton("Min")
                .setValue(0)
                .setPosition(10,280)
@@ -200,7 +204,57 @@ void setup(){
                 }
               });;
                
- cp5.getController("bar");
+////////////////////////////
+
+//Month buttons
+for(int a = 0, b = 400, c = 20; a < months.length-1; a++, b+=30){
+  String name = months[a];
+  String name2 = months[a+1];
+  
+  if(a%2 == 0){
+      buttons[a] = cp5.addButton(name)
+      .setValue(0)
+      .setPosition(c, b)
+      .setSize(30,30)
+      .setColorBackground(#FABD8B)
+      .setColorForeground(#FADAC0)
+      .setColorActive(#FADAC0)
+      .setSwitch(true)
+      .addCallback(new CallbackListener(){
+                public void controlEvent(CallbackEvent event){
+                  if(event.getAction() == ControlP5.ACTION_PRESS){
+                    if(bar.isOn()){
+                        drawBarMonth();
+                    }
+                  }
+                }
+              });
+  }
+  
+  if((a+1)%2 != 0 ){
+      buttons[a+1] = cp5.addButton(name2)
+      .setValue(0)
+      .setPosition(c*4, b)
+      .setSize(30,30)
+      .setColorBackground(#FABD8B)
+      .setColorForeground(#FADAC0)
+      .setColorActive(#FADAC0)
+      .setSwitch(true)
+      .addCallback(new CallbackListener(){
+                public void controlEvent(CallbackEvent event){
+                   if(event.getAction() == ControlP5.ACTION_PRESS){
+                     if(bar.isOn()){
+                        drawBarMonth();
+                     }
+                   }
+                }
+              });
+    
+  }
+
+}
+
+
 
  /*                */
  
@@ -231,86 +285,8 @@ void draw(){
  //axis(); //label is pixelated for some reason
 }
 
-void reset(){ // resets graph
-   axis();
-}
 
 
 
 
-//void Bar(){
-//  if(t){
-//     bar.setOn();
-//     drawBars(); 
-//     reset();
-//     t = false;
-//  }
-//  else{
-//     bar.setOff();
-//     background(#FFFFFF);
-//     reset();
-//  }
-
-  //if(bar.isOn()){
-  //   bar.setOff();
-  //   background(#FFFFFF);
-  //   reset();
-  // }
-  // else{
-  //   bar.setOn();
-  //   drawBars(); 
-  //   reset();
-  // }
-
-//} 
-
-//void plot(){
-// if(plot.isOn()){
-//   plot.setOff();
-//   background(#FFFFFF);
-//   reset();
-// }
-// else{
-//   plot.setOn();
-//   drawPlot();
-//   reset();
-// }
-  
-//}
-
-
-
-
-//void controlEvent(ControlEvent theEvent){
-  
-// if(theEvent.getController().getName()=="Bar"){
-//   if(bar.isOn()){
-//     bar.setOff();
-//   }
-//   else{
-//     bar.setOn();
-//   }
-//   drawBars();
-//   reset();
-// }
- 
-// if(theEvent.getController().getName()=="Plot"){
-//   drawPlot();
-//   reset(); 
-// }
-  
-// if(theEvent.getController().getName()=="Monthly"){
-//   drawPlot();
-//   reset();
-// }
- 
-// if(theEvent.getController().getName()=="Max"){
-
-// }
- 
-// if(theEvent.getController().getName()=="Min"){
-//   println("asd"); 
-// }
-
-//}
 
