@@ -32,8 +32,6 @@ void drawBars(){ //all data
    background(0xffFFFFFF); //taking into consideration black background after snowfall
    stroke(0xff8F9090); //cleaner bars
    strokeWeight(0.25);
-
-
    
    int counter = 0;
    
@@ -94,6 +92,12 @@ void drawBars(){ //all data
    }
    
    axis();
+   for(Button b: buttons){
+     
+      if(b.isOn()){
+         drawBarMonth(); 
+      }
+   }
    
 }
 
@@ -113,7 +117,7 @@ void drawBarMonth(){
     int count = 1;
     int counter = 0;
     for(Button a: buttons){ //check each individual button to see which one is on
-     if(a.isOn()){
+     if(a.isOn() && (!min.isOn() && !max.isOn())){ // when max and min are unselected
          
          fill(0xffF08C8C);
       
@@ -149,6 +153,31 @@ void drawBarMonth(){
          }
        //////////////
 
+     }
+     else if(a.isOn() && max.isOn()){
+         
+         fill(0xffF08C8C);
+      
+         for(int x = 0; x < tempData.length; x++){
+           if(tempData[x].date.Month == count){
+             rect(xMin + counter, yMin - tempData[x].maxTemp*multFact, initialWidth, tempData[x].maxTemp*multFact);
+           }
+           counter+=4;
+         }      
+       
+     }
+     else if(a.isOn() && min.isOn()){
+         counter = 0;
+         fill(0xff8CEBF0);
+         for(int x = 0; x < tempData.length; x++){
+           if(tempData[x].date.Month == count){
+             rect(xMin + counter, yMin - tempData[x].minTemp*multFact, initialWidth, tempData[x].minTemp*multFact);
+           }
+           counter+=4;
+         }
+              
+       
+       
      }
      count++;
     }
