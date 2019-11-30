@@ -33,7 +33,7 @@ public int multFact = 15; //to scale raw data onto graphs
 
 
 void setup(){
-  
+ 
  background(0xffFFFFFF);
  size(1700,800);
  /* Adding buttons */
@@ -50,6 +50,7 @@ void setup(){
               .addCallback(new CallbackListener(){
                 public void controlEvent(CallbackEvent event){
                   if(event.getAction() == ControlP5.ACTION_PRESS){
+
                     
                     if(bar.isOn()){
                        bar.setOff();
@@ -62,12 +63,24 @@ void setup(){
                        drawBars(); 
                        
                     }
-                    else{
+                    else if(!bar.isOn()){
                        bar.setOn();
-                       drawBars(); 
-                                             
+                       drawBars();                       
                     }
-                    
+                    else{
+                       for(Button b: buttons){
+                         if (b.isOn()){
+                           bar.setOn();
+                           drawBarMonth(); 
+                         }
+                         else if (bar.isOn() && b.isOn()){
+                          bar.setOff(); 
+                         }
+                         
+                      }
+                      
+                    }
+ 
                   }
                 }
               });
@@ -80,24 +93,37 @@ void setup(){
                .addCallback(new CallbackListener(){
                 public void controlEvent(CallbackEvent event){
                   if(event.getAction() == ControlP5.ACTION_PRESS){
+
                     
                     if(plot.isOn()){
                        plot.setOff();
                        background(0xffFFFFFF);
-                       axis();
+                       axis(); //reset field
                     }
-                    else if(bar.isOn()){
-                       bar.setOff(); //since bar and plot cannot be on at same time
+                    else if (bar.isOn()){
+                       bar.setOff(); //since plot and bar cannot be on at same time
                        plot.setOn();
                        drawPlot(); 
                        
                     }
-                    else{
+                    else if(!plot.isOn()){
                        plot.setOn();
-                       drawPlot(); 
-                                           
+                       drawPlot();                       
                     }
-                    
+                    else{
+                       for(Button b: buttons){
+                         if (b.isOn()){
+                           plot.setOn();
+                           drawPlotMonth(); 
+                         }
+                         else if (plot.isOn() && b.isOn()){
+                          plot.setOff(); 
+                         }
+                         
+                      }
+                      
+                    }
+ 
                   }
                 }
               });
@@ -224,6 +250,7 @@ for(int a = 0, b = 400, c = 20; a < months.length-1; a++, b+=30){
       .setColorForeground(0xffFADAC0)
       .setColorActive(0xffFADAC0)
       .setSwitch(true);
+
   }
   
   if((a+1)%2 != 0 ){ //retrieve from index 1,3,5,7...
@@ -235,11 +262,16 @@ for(int a = 0, b = 400, c = 20; a < months.length-1; a++, b+=30){
       .setColorForeground(0xffFADAC0)
       .setColorActive(0xffFADAC0)
       .setSwitch(true);
+       
 
     
   }
 
 }
+
+
+
+
 
 for(Button b: buttons){
   final Button c = b;
@@ -247,19 +279,31 @@ for(Button b: buttons){
                 public void controlEvent(CallbackEvent event){
                      if (event.getAction() == ControlP5.ACTION_PRESS){
                        println("You're in!");
+                       
+                       //turn off all other month buttons
+                       if(!c.isOn())
+                         desMonth(c);
+                         
+                       //bar
                        if(bar.isOn() && !c.isOn()){
                           c.setOn();
-                          drawBarMonth();
-  
+                          drawBarMonth(); 
                        }
                        else if(bar.isOn() && c.isOn()){
                         c.setOff();
                         drawBars();
                        }
-                       else if(plot.isOn()){
-                          drawPlotMonth(); 
-  
+
+                       //plot
+                       if(plot.isOn() && !c.isOn()){
+                          c.setOn();
+                          drawPlotMonth();
                        }
+                       else if(plot.isOn() && c.isOn()){
+                          c.setOff();
+                          drawPlot();
+                       }
+
                      
                    }
                 }
@@ -297,4 +341,17 @@ for(Button b: buttons){
 
 void draw(){
  //axis(); //label is pixelated for some reason
+}
+
+void desMonth(Button a){ //turning off all other Month buttons other than the one selected. 
+  
+ for(Button b: buttons){
+   
+    if(b != a){
+      b.setOff();
+    }
+   
+   
+ }
+  
 }
